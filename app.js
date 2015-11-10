@@ -6,7 +6,7 @@ var express = require('express'),
 	config = require('./config/config.js'),
 	ConnectMongo = require('connect-mongo')(session);
 	mongoose = require('mongoose').connect(config.dbURL),
-	passport = requuire('passport'),
+	passport = require('passport'),
 	FacebookStrategy = require('passport-facebook').Strategy
 	
 app.set('views', path.join(__dirname, 'views'));
@@ -26,15 +26,18 @@ if (env === 'development') {
 		resave:true,
 		store: new ConnectMongo({
 			url:config.dbURL,
-			mongoose_connection:mongoose.connection[0],
+			mongooseConnection:mongoose.connection[0],
 			stringify:true
 		})
 	}));
 }
 
+app.use(passport.initialize());
+app.use(passport.session());
+
 require('./auth/passportAuth.js')(passport, FacebookStrategy, config, mongoose);
 	
-require('./routes/routes.js')(express, app);
+require('./routes/routes.js')(express, app, passport);
 
 app.listen(3000, function() {
 	console.log('Chatcat running on port 3000');

@@ -1,6 +1,6 @@
 module.exports = function(passport, FacebookStrategy, config, mongoose) {
 	
-	var charUser = new mongoose.Schema({
+	var chatUser = new mongoose.Schema({
 		profileID: String,
 		fullname: String,
 		profilePic: String
@@ -28,7 +28,7 @@ module.exports = function(passport, FacebookStrategy, config, mongoose) {
 		// If not, create one and return the profile
 		// If the user exists, simply return the profile
 		
-		userModel.finOne({'profileId':profile.id}, function(err, result) {
+		userModel.findOne({'profileId':profile.id}, function(err, result) {
 			if (result) {
 				done(null, result);
 			} else {
