@@ -23,13 +23,9 @@ module.exports = function(express, app, passport) {
 		res.render('chatrooms', {title:'Chatrooms', user:req.user});
 	});
 	
-	router.get('/setcolor', function(req, res, next) {
-		req.session.favColor = "Red";
-		res.send("Setting favourite color!");
-	});
-	
-	router.get('/getcolor', function(req, res, next) {
-		res.send('Favourite color: ' + (req.session.favColor===undefined ? "Not found" : req.session.favColor))
+	router.get('/logout', function(req, res, next){
+		req.logout();
+		res.redirect('/');
 	});
 	
 	app.use('/', router);
