@@ -24,7 +24,7 @@ module.exports = function(io, rooms){
 		});
 		
 		function updateUserList(room, updateAll) {
-			var getUsers = io.of('/messages').clients(room);
+			var getUsers = getUsersFromRoom(room);
 			var userlist = [];
 			for (var i in getUsers) {
 				userlist.push({user:getUsers[i].username, userPic:getUsers[i].userPic});
@@ -32,8 +32,18 @@ module.exports = function(io, rooms){
 			socket.to(room).emit('updateUsersList', JSON.stringify(userlist));
 			
 			if (updateAll) {
-				socket.broadcast.to(room).emit('updateUserList', JSON.stringify(userlist));
+				socket.broadcast.to(room).emit('updateUsersList', JSON.stringify(userlist));
 			}
+		}
+		
+		function getUsersFromRoom(room) {
+			var usersArray = [];
+			var nsp = io.of('/messages');
+			var clientsInRoom = nsp.adapter.rooms[room];
+			for (var client in clientsInRoom) {
+				usersArray.push(nsp.connected[client]);
+			}
+			return usersArray;
 		}
 		
 		socket.on('updateList', function(data){
